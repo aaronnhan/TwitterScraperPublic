@@ -1,0 +1,7 @@
+<h1>Application Name </h1>
+<br />
+<%= form_tag("/search", method: "get") do %>
+  <%= label_tag(:username, "Enter Username") %>
+  <%= text_field_tag(:username) %>
+  <%= submit_tag("Search") %>
+<% end %>
