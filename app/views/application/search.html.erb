@@ -1,5 +1,3 @@
 <h1>Search</h1>
-<% @tweets.each do |tweet|%>
-  <%= tweet.username %> <br />
-  <%= tweet.content %>  <br /> <br />
-<% end %>
+
+<%= line_chart [{name: @username, data: @popularity_time_hash}] %>
