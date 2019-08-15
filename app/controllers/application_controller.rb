@@ -9,25 +9,26 @@ class ApplicationController < ActionController::Base
   end
 
   def search
-    options = { count: 100, include_rts: true }
+    options = { count: 100, include_rts: false }
     @username = params[:username]
     timeline = $twitter_client.user_timeline(@username, options)
-    time_array = []
+    time_hash = {}
     @popularity_time_hash = {}
-
-    24.times do
-      time_array << []
-    end
 
     timeline.each do |t|
       popularity = t.favorite_count
-      hour = t.created_at.hour
-      time_array[hour].append(popularity)
+      time = t.created_at.getlocal
+      time_key = time.hour * 60 + time.min
+      if time_hash.include? time_key
+        time_hash[time_key].append(popularity)
+      else
+        time_hash[time_key] = [popularity]
+      end
     end
 
-    for i in 0..23
-      average = time_array[i].inject(0, :+) / time_array.length
-      @popularity_time_hash[i] = average
+    time_hash.each do |time, popularities|
+      average = popularities.inject(0, :+) / popularities.length
+      @popularity_time_hash[time] = average
     end
   end
 end
