@@ -1,4 +1,60 @@
-<h1>Search</h1>
-<%= link_to "Back", "/home_screen" %>
-<br />
-<%= line_chart [{name: @username, data: @popularity_time_hash}] %>
+<html>
+	<style>
+		body {background-color: #ffffff; text-align: center; color: #428dcf}
+		#submit {background-color: #428dcf; color: #ffffff;border-radius: 5vw; border-color: #428dcf; border-style: none;}
+
+		.icon-bar {
+		  position: fixed;
+		}
+
+		/* Style the icon bar links */
+		.icon-bar a {
+/*		  display: block;*/
+		  text-align: center;
+		  transition: all 0.3s ease;
+		  color: white;
+		  font-size: 20px;
+		}
+	</style>
+
+	<div class="icon-bar">
+		<%= form_tag("/search", method: "get") do %>
+		  <%= label_tag(:username, "Search another user", id: "username") %>
+		  <%= text_field_tag(:username) %>
+		  <%= submit_tag("Analyze!", id: "submit") %>
+		<% end %>
+	</div>
+
+	<h1 style="color: #428dcf;padding-top: 5vw">Analyzing Twitter For Last 50 Tweets Of <%= params["username"]%></h1>
+
+	<br />
+	<%= area_chart [{name: 'retweets', data: @retweet_time_hash},\
+	                {name: 'likes', data: @popularity_time_hash}],
+	      xmin: 0, xmax: 23, height: '800px', xtitle: 'Time (UTC)', ytitle: 'people'%>
+	<br />
+	<h1>Suggested Posting Times:</h1>
+    <h3><%= params["username"]%> has the most average likes of <%=@popularity_time_hash.values[0]%> at <%=@popularity_time_hash.keys[0] %>:00 UTC. They should post during this time for maximum likes! </h3>
+    <h3><%= params["username"]%> has the most average retweets of <%=@retweet_time_hash.values[0]%> at <%=@retweet_time_hash.keys[0] %>:00 UTC. They should post during this time for maximum retweets! </h3>
+    <br />
+
+	<h1>Sentiment Analysis: </h1>
+	<h3><%= params["username"]%> has an average sentiment analysis score of <%=@sentiment_score %>. This suggests their tweets have a
+		<% if @sentiment_score > 50%>
+		very positive
+		<% elsif @sentiment_score > 0 %>
+		positive
+		<% elsif @sentiment_score < -50 %>
+		very negative
+		<% else %>
+		negative
+		<% end %>
+		average sentiment. </h3>
+		<br />
+		<h3>How does this compare to the sentiment of the last 5 tweets of some of the most popular twitter accounts?</h3>
+    <%= bar_chart @comparison_hash%>
+
+	<h1>Randomly Generated phrases based on posting history of <%= params["username"]%></h1>
+	<% @sentences.each do |sentence| %>
+        <h3> <%= sentence %> </h3>
+	<% end %>
+</html>

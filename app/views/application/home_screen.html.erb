@@ -1,8 +1,27 @@
-<h1>Application Name </h1>
-<br />
+<html>
+	<style>
+		body {background-color: #ffffff; text-align: center;}
+		#submit {background-color: #428dcf; color: #ffffff;border-radius: 5vw; border-color: #428dcf; border-style: none;}
+		#username { color: #428dcf}
+	</style>
 
-<%= form_tag("/search", method: "get") do %>
-  <%= label_tag(:username, "Enter Username") %>
-  <%= text_field_tag(:username) %>
-  <%= submit_tag("Search") %>
-<% end %>
+	<body>
+        <% if params[:error] %>
+            <div style="position: absolute; left: 0; right: 0; margin-left: auto;margin-right: auto">
+	            <h1 style="color: #428dcf;">User Not Found</h1>
+	        </div>
+        <% end %>
+		<img src="https://upload.wikimedia.org/wikipedia/fr/thumb/c/c8/Twitter_Bird.svg/600px-Twitter_Bird.svg.png" alt="Twitter Bird" style="width:5vw;height:5vw;padding-top: 30vh">
+		<div id="titlebar">
+		    <h1 style="line-height: 50px; color: #428dcf">Twitter Analyzer</h1>
+		<br />
+
+		<%= form_tag("/search", method: "get") do %>
+		  <%= label_tag(:username, "Enter Twitter Username", id: "username") %>
+		  <%= text_field_tag(:username) %>
+		  <%= submit_tag("Analyze!", id: "submit") %>
+		<% end %>
+        <h5 style="color: #428dcf">*Collecting and analyzing data takes time. Please be patient, thank you!</h5>
+		</div>
+	</body>
+</html>
